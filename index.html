@@ -67,42 +67,94 @@
       100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
     }
 
-    /* Top Language Switcher Bar */
-    .top-controls {
+    /* Top Language Dropdown - Identico al sito web */
+    .lang-dropdown-container {
       position: absolute;
       top: calc(16px + env(safe-area-inset-top, 0px));
       right: 20px;
       z-index: 50;
+    }
+
+    .lang-trigger-btn {
       display: flex;
       align-items: center;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 9999px;
-      padding: 3px 4px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .lang-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 9999px;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       cursor: pointer;
       transition: all 0.2s ease;
+      padding: 0;
     }
 
-    .lang-btn.active {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
+    .lang-trigger-btn:hover {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-1px) scale(1.05);
     }
 
-    .lang-btn:hover:not(.active) {
+    .lang-flag-img {
+      width: 20px;
+      height: 14px;
+      object-fit: cover;
+      border-radius: 2px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .lang-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      width: 150px;
+      background: rgba(18, 14, 28, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 6px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 100;
+      animation: menuFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes menuFadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lang-menu.open {
+      display: block;
+    }
+
+    .lang-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .lang-menu-item:hover {
+      background: rgba(139, 92, 246, 0.18);
+      color: #c084fc;
+    }
+
+    .lang-menu-item.selected {
+      background: rgba(139, 92, 246, 0.25);
       color: #ffffff;
     }
 
@@ -155,6 +207,11 @@
       color: #fbbf24;
       margin-bottom: 18px;
       letter-spacing: 0.02em;
+      transition: color 0.3s ease;
+    }
+
+    .status-indicator.online {
+      color: #34d399;
     }
 
     .status-dot {
@@ -164,6 +221,12 @@
       background: #f59e0b;
       box-shadow: 0 0 10px #f59e0b;
       animation: blink 2s infinite ease-in-out;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .status-dot.online {
+      background: #10b981;
+      box-shadow: 0 0 12px #10b981;
     }
 
     @keyframes blink {
@@ -180,6 +243,7 @@
       margin-bottom: 14px;
       color: #ffffff;
       padding: 0 8px;
+      transition: all 0.3s ease;
     }
 
     p.subtitle {
@@ -187,9 +251,47 @@
       line-height: 1.6;
       color: var(--text-muted);
       max-width: 520px;
-      margin: 0 auto clamp(28px, 5vh, 36px);
+      margin: 0 auto clamp(24px, 4vh, 32px);
       font-weight: 400;
       padding: 0 12px;
+      transition: all 0.3s ease;
+    }
+
+    /* Primary Portal Return CTA (Shows when online) */
+    .portal-online-cta {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 440px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      text-decoration: none;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .portal-online-cta:hover {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      box-shadow: 0 14px 35px rgba(16, 185, 129, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .portal-online-cta.visible {
+      display: inline-flex;
+      animation: popCta 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popCta {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     /* Minimal Actions Row */
@@ -302,41 +404,6 @@
       color: #ffffff;
     }
 
-    /* Real-Time Recovery Banner */
-    .recovery-banner {
-      display: none;
-      position: fixed;
-      top: calc(14px + env(safe-area-inset-top, 0px));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      padding: 8px 18px;
-      border-radius: 9999px;
-      font-weight: 600;
-      font-size: 12px;
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-      animation: fadeInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      width: max-content;
-      max-width: 92vw;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translate(-50%, -15px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
-    }
-
-    .recovery-banner a {
-      color: #ffffff;
-      font-weight: 800;
-      text-decoration: underline;
-      margin-left: 6px;
-      cursor: pointer;
-    }
-
     /* Minimal Footer */
     footer {
       position: relative;
@@ -374,6 +441,9 @@
         max-width: 100%;
         flex: none;
       }
+      .portal-online-cta {
+        max-width: 320px;
+      }
       .minecraft-pill {
         width: 100%;
         max-width: 320px;
@@ -386,37 +456,51 @@
   <!-- Ambient Atmospheric Light -->
   <div class="ambient-glow"></div>
 
-  <!-- Minimal Language Switcher -->
-  <div class="top-controls" aria-label="Language selector">
-    <button class="lang-btn" id="btnLangIt" onclick="setLanguage('it')">IT</button>
-    <button class="lang-btn" id="btnLangEn" onclick="setLanguage('en')">EN</button>
-  </div>
-
-  <!-- Real-time Recovery Banner -->
-  <div class="recovery-banner" id="recoveryBanner">
-    <span id="bannerMsg">✨ Il portale web è tornato online!</span>
-    <a href="https://www.infinitysmart.eu" id="bannerLink">Rientra sul portale</a>
+  <!-- Flag Language Switcher (Uguale al sito web) -->
+  <div class="lang-dropdown-container">
+    <button class="lang-trigger-btn" id="langTriggerBtn" onclick="toggleLangMenu()" aria-label="Cambia lingua" title="Cambia lingua">
+      <img class="lang-flag-img" id="currentFlag" src="" alt="Flag">
+    </button>
+    <div class="lang-menu" id="langMenu">
+      <button class="lang-menu-item" id="itemLangIt" onclick="selectLanguage('it')">
+        <img class="lang-flag-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'><rect width='1' height='2' fill='%23009246'/><rect x='1' width='1' height='2' fill='%23fff'/><rect x='2' width='1' height='2' fill='%23ce2b37'/></svg>" alt="IT">
+        <span>Italiano</span>
+      </button>
+      <button class="lang-menu-item" id="itemLangEn" onclick="selectLanguage('en')">
+        <img class="lang-flag-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'><clipPath id='s'><path d='M0 0v30h60V0z'/></clipPath><clipPath id='t'><path d='M30 15h30v15zH0zM0 0h30v15z'/></clipPath><g clip-path='url(%23s)'><path d='M0 0v30h60V0z' fill='%23012169'/><path d='M0 0l60 30m0-30L0 30' stroke='%23fff' stroke-width='6'/><path d='M0 0l60 30m0-30L0 30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/><path d='M30 0v30M0 15h60' stroke='%23fff' stroke-width='10'/><path d='M30 0v30M0 15h60' stroke='%23C8102E' stroke-width='6'/></g></svg>" alt="EN">
+        <span>English</span>
+      </button>
+    </div>
   </div>
 
   <!-- Main Centered Layout -->
   <main>
     <!-- Free-floating Logo -->
-    <div class="logo-container" onclick="checkImmediately()" title="Controlla stato live">
+    <div class="logo-container" onclick="checkImmediately()" title="Clicca per controllare lo stato">
       <img class="logo-img" src="https://d1lppblt9t2x15.cloudfront.net/logos/4b2967f2ccddb465cb7c9f0903b8f755.png" alt="InfinitySmart">
     </div>
 
-    <!-- Status Indicator -->
-    <div class="status-indicator">
-      <div class="status-dot"></div>
+    <!-- Status Indicator (Dinamico) -->
+    <div class="status-indicator" id="statusIndicator">
+      <div class="status-dot" id="statusDot"></div>
       <span id="txtStatus">Manutenzione in corso</span>
     </div>
 
-    <!-- Title & Subtitle -->
+    <!-- Title & Subtitle (Dinamici) -->
     <h1 id="txtTitle">Stiamo aggiornando il sito</h1>
     <p class="subtitle" id="txtSubtitle">
       Il portale web è momentaneamente offline per aggiornamenti di sistema.
       I server Minecraft e la community Discord sono attivi e raggiungibili.
     </p>
+
+    <!-- Primary CTA Button (Appare SOLO quando il sito è tornato online) -->
+    <a href="https://www.infinitysmart.eu" class="portal-online-cta" id="portalOnlineCta">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+      <span id="txtPortalCta">Rientra sul Portale Web</span>
+    </a>
 
     <!-- Sleek Minimal Actions -->
     <div class="actions-row">
@@ -449,67 +533,115 @@
   </footer>
 
   <script>
-    // --- MULTILINGUA & AUTO-DETECTION ---
+    // --- FLAG SVG ICONS (Identiche al sito Next.js) ---
+    const FLAG_URLS = {
+      it: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"><rect width="1" height="2" fill="%23009246"/><rect x="1" width="1" height="2" fill="%23fff"/><rect x="2" width="1" height="2" fill="%23ce2b37"/></svg>`,
+      en: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><clipPath id="s"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="t"><path d="M30 15h30v15zH0zM0 0h30v15z"/></clipPath><g clip-path="url(%23s)"><path d="M0 0v30h60V0z" fill="%23012169"/><path d="M0 0l60 30m0-30L0 30" stroke="%23fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(%23t)" stroke="%23C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="%23fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="%23C8102E" stroke-width="6"/></g></svg>`
+    };
+
+    // --- DICTIONARY CON STATI DINAMICI (MAINTENANCE & ONLINE) ---
     const i18n = {
       it: {
-        status: "Manutenzione in corso",
-        title: "Stiamo aggiornando il sito",
-        subtitle: "Il portale web è momentaneamente offline per aggiornamenti di sistema. I server Minecraft e la community Discord sono attivi e raggiungibili.",
+        maintenance: {
+          status: "Manutenzione in corso",
+          title: "Stiamo aggiornando il sito",
+          subtitle: "Il portale web è momentaneamente offline per aggiornamenti di sistema. I server Minecraft e la community Discord sono attivi e raggiungibili."
+        },
+        online: {
+          status: "Portale Online • Sistemi Operativi",
+          title: "Il Portale è di nuovo Online!",
+          subtitle: "La manutenzione è stata completata con successo. Stai per essere reindirizzato al portale principale...",
+          portalCta: "Rientra sul Portale Web"
+        },
         btnStatus: "Status Page",
         btnDiscord: "Discord",
         copyIp: "Copia IP",
         copied: "Copiato!",
-        bannerMsg: "✨ Il portale web è tornato online!",
-        bannerLink: "Rientra sul portale",
         ftStatus: "Status",
         ftDiscord: "Discord"
       },
       en: {
-        status: "Maintenance in progress",
-        title: "We are upgrading the website",
-        subtitle: "The web portal is temporarily offline for scheduled updates. Minecraft servers and Discord community remain fully active.",
+        maintenance: {
+          status: "Maintenance in progress",
+          title: "We are upgrading the website",
+          subtitle: "The web portal is temporarily offline for scheduled updates. Minecraft servers and Discord community remain fully active."
+        },
+        online: {
+          status: "Portal Online • All Systems Operational",
+          title: "The Website is Back Online!",
+          subtitle: "Scheduled maintenance is completed. You are being redirected to the main website...",
+          portalCta: "Enter Website Portal"
+        },
         btnStatus: "Status Page",
         btnDiscord: "Discord",
         copyIp: "Copy IP",
         copied: "Copied!",
-        bannerMsg: "✨ The website is back online!",
-        bannerLink: "Return to portal",
         ftStatus: "Status",
         ftDiscord: "Discord"
       }
     };
 
     let currentLang = 'it';
+    let isSiteOnline = false;
+    let redirectCountdown = 4;
+    let countdownTimer = null;
 
+    // --- DETECT & SET LANGUAGE (Usa la stessa chiave 'is-lang' del sito Next.js) ---
     function detectLanguage() {
-      const saved = localStorage.getItem('inf_lang');
-      if (saved && (saved === 'it' || saved === 'en')) return saved;
+      const stored = localStorage.getItem('is-lang');
+      if (stored && (stored === 'it' || stored === 'en')) return stored;
       const browserLang = (navigator.language || navigator.userLanguage || 'it').toLowerCase();
       return browserLang.startsWith('it') ? 'it' : 'en';
     }
 
-    function setLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('inf_lang', lang);
+    function applyTranslations() {
+      const d = i18n[currentLang];
+      const stateContent = isSiteOnline ? d.online : d.maintenance;
 
-      const d = i18n[lang];
-      document.getElementById('txtStatus').innerText = d.status;
-      document.getElementById('txtTitle').innerText = d.title;
-      document.getElementById('txtSubtitle').innerText = d.subtitle;
+      document.getElementById('txtStatus').innerText = stateContent.status;
+      document.getElementById('txtTitle').innerText = stateContent.title;
+      document.getElementById('txtSubtitle').innerText = stateContent.subtitle;
       document.getElementById('txtBtnStatus').innerText = d.btnStatus;
       document.getElementById('txtBtnDiscord').innerText = d.btnDiscord;
       document.getElementById('copyHint').innerText = d.copyIp;
-      document.getElementById('bannerMsg').innerText = d.bannerMsg;
-      document.getElementById('bannerLink').innerText = d.bannerLink;
       document.getElementById('ftStatus').innerText = d.ftStatus;
       document.getElementById('ftDiscord').innerText = d.ftDiscord;
 
-      document.getElementById('btnLangIt').classList.toggle('active', lang === 'it');
-      document.getElementById('btnLangEn').classList.toggle('active', lang === 'en');
-      document.documentElement.lang = lang;
+      if (isSiteOnline) {
+        document.getElementById('txtPortalCta').innerText = stateContent.portalCta;
+      }
+
+      document.getElementById('currentFlag').src = FLAG_URLS[currentLang];
+      document.getElementById('itemLangIt').classList.toggle('selected', currentLang === 'it');
+      document.getElementById('itemLangEn').classList.toggle('selected', currentLang === 'en');
+      document.documentElement.lang = currentLang;
     }
 
-    // --- COPY MINECRAFT IP ---
+    function selectLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('is-lang', lang);
+      applyTranslations();
+      toggleLangMenu(false);
+    }
+
+    function toggleLangMenu(forceState) {
+      const menu = document.getElementById('langMenu');
+      if (typeof forceState === 'boolean') {
+        menu.classList.toggle('open', forceState);
+      } else {
+        menu.classList.toggle('open');
+      }
+    }
+
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', (e) => {
+      const container = document.querySelector('.lang-dropdown-container');
+      if (container && !container.contains(e.target)) {
+        toggleLangMenu(false);
+      }
+    });
+
+    // --- COPIA IP MINECRAFT ---
     function copyIP() {
       const hint = document.getElementById('copyHint');
       const ip = 'play.infinitysmart.eu';
@@ -528,18 +660,15 @@
       });
     }
 
-    // --- REAL-TIME LIVE RECOVERY CHECK (IMMEDIATO) ---
-    let isSiteOnline = false;
-
+    // --- CONTROLLO REAL-TIME & TRANSIZIONE DINAMICA ---
     async function checkSiteHealth() {
       if (isSiteOnline) return;
       
       const checkUrl = 'https://www.infinitysmart.eu/api/auth/health?_t=' + Date.now();
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), 2200);
 
-        // Fetch direct health endpoint on www
         await fetch(checkUrl, { 
           method: 'GET', 
           mode: 'no-cors', 
@@ -548,47 +677,50 @@
         });
         clearTimeout(timeoutId);
 
-        // If no error was thrown, server is accepting connections!
-        onSiteBackOnline();
+        // Se non va in errore, il server risponde ed è online!
+        transitionToOnline();
       } catch (err) {
-        // Still offline or timeout
+        // Still offline
       }
     }
 
-    function onSiteBackOnline() {
+    function transitionToOnline() {
       if (isSiteOnline) return;
       isSiteOnline = true;
 
-      const banner = document.getElementById('recoveryBanner');
-      if (banner) {
-        banner.style.display = 'block';
-      }
+      // 1. Aggiorna pallino e stato in verde
+      document.getElementById('statusDot').classList.add('online');
+      document.getElementById('statusIndicator').classList.add('online');
 
-      // Update status dot to green
-      const dot = document.querySelector('.status-dot');
-      if (dot) {
-        dot.style.background = '#10b981';
-        dot.style.boxShadow = '0 0 10px #10b981';
-      }
-      const statusTxt = document.getElementById('txtStatus');
-      if (statusTxt) {
-        statusTxt.innerText = currentLang === 'it' ? 'Servizi ripristinati' : 'Services restored';
-        statusTxt.style.color = '#34d399';
-      }
+      // 2. Mostra il tasto primario di rientro
+      document.getElementById('portalOnlineCta').classList.add('visible');
+
+      // 3. Applica i testi del nuovo stato online
+      applyTranslations();
+
+      // 4. Avvia conto alla rovescia per reindirizzamento automatico morbido
+      countdownTimer = setInterval(() => {
+        redirectCountdown--;
+        if (redirectCountdown <= 0) {
+          clearInterval(countdownTimer);
+          window.location.href = 'https://www.infinitysmart.eu';
+        }
+      }, 1000);
     }
 
     function checkImmediately() {
       checkSiteHealth();
     }
 
-    // Init language on load
-    setLanguage(detectLanguage());
+    // Inizializza lingua
+    currentLang = detectLanguage();
+    applyTranslations();
 
-    // Check IMMEDIATELY at 0ms
+    // Controllo immediato a 0ms
     checkSiteHealth();
 
-    // Fast polling: check every 3.5 seconds
-    setInterval(checkSiteHealth, 3500);
+    // Polling frequente ogni 3 secondi
+    setInterval(checkSiteHealth, 3000);
   </script>
 </body>
 </html>
