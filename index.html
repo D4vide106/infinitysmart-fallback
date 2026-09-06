@@ -199,7 +199,7 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       width: 100%;
       max-width: 440px;
     }
@@ -209,7 +209,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 13px 24px;
+      padding: 12px 24px;
       border-radius: 12px;
       font-size: 14px;
       font-weight: 600;
@@ -217,7 +217,9 @@
       transition: all 0.25s ease;
       cursor: pointer;
       border: none;
-      min-height: 48px;
+      height: 46px;
+      flex: 1 1 160px;
+      max-width: 210px;
     }
 
     .btn:active {
@@ -227,7 +229,6 @@
     .btn-status {
       background: #ffffff;
       color: #09080e;
-      flex: 1 1 180px;
     }
 
     .btn-status:hover {
@@ -240,7 +241,6 @@
       background: rgba(88, 101, 242, 0.15);
       color: #a5affb;
       border: 1px solid rgba(88, 101, 242, 0.3);
-      flex: 1 1 180px;
     }
 
     .btn-discord:hover {
@@ -257,14 +257,14 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      padding: 11px 20px;
+      padding: 10px 20px;
       border-radius: 9999px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
       transition: all 0.2s ease;
       max-width: 100%;
-      min-height: 44px;
+      height: 44px;
     }
 
     .minecraft-pill:hover {
@@ -306,21 +306,22 @@
     .recovery-banner {
       display: none;
       position: fixed;
-      top: calc(16px + env(safe-area-inset-top, 0px));
+      top: calc(14px + env(safe-area-inset-top, 0px));
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #ffffff;
-      padding: 10px 22px;
+      padding: 8px 18px;
       border-radius: 9999px;
       font-weight: 600;
-      font-size: 13px;
-      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+      font-size: 12px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
       animation: fadeInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       width: max-content;
-      max-width: 90vw;
+      max-width: 92vw;
       text-align: center;
+      white-space: nowrap;
     }
 
     @keyframes fadeInDown {
@@ -360,15 +361,22 @@
 
     /* Mobile fine-tuning */
     @media (max-width: 480px) {
+      body {
+        padding-top: calc(50px + env(safe-area-inset-top, 0px));
+      }
       .actions-row {
         flex-direction: column;
         width: 100%;
+        max-width: 320px;
       }
-      .btn-status, .btn-discord {
+      .btn {
         width: 100%;
+        max-width: 100%;
+        flex: none;
       }
       .minecraft-pill {
         width: 100%;
+        max-width: 320px;
         justify-content: space-between;
       }
     }
