@@ -550,7 +550,7 @@
         online: {
           status: "Portale Online • Sistemi Operativi",
           title: "Il Portale è di nuovo Online!",
-          subtitle: "La manutenzione è stata completata con successo. Stai per essere reindirizzato al portale principale...",
+          subtitle: "La manutenzione è stata completata con successo. Clicca sul pulsante sottostante per accedere al portale.",
           portalCta: "Rientra sul Portale Web"
         },
         btnStatus: "Status Page",
@@ -569,7 +569,7 @@
         online: {
           status: "Portal Online • All Systems Operational",
           title: "The Website is Back Online!",
-          subtitle: "Scheduled maintenance is completed. You are being redirected to the main website...",
+          subtitle: "Maintenance has been completed successfully. Click the button below to enter the website portal.",
           portalCta: "Enter Website Portal"
         },
         btnStatus: "Status Page",
@@ -583,8 +583,6 @@
 
     let currentLang = 'it';
     let isSiteOnline = false;
-    let redirectCountdown = 4;
-    let countdownTimer = null;
 
     // --- DETECT & SET LANGUAGE (Usa la stessa chiave 'is-lang' del sito Next.js) ---
     function detectLanguage() {
@@ -660,27 +658,34 @@
       });
     }
 
-    // --- CONTROLLO REAL-TIME & TRANSIZIONE DINAMICA ---
+    // --- CONTROLLO REAL-TIME & TRANSIZIONE DINAMICA (SENZA REDIRECT LOOP / SENZA SPAM) ---
     async function checkSiteHealth() {
-      if (isSiteOnline) return;
-      
-      const checkUrl = 'https://www.infinitysmart.eu/api/auth/health?_t=' + Date.now();
+      const checkUrl = 'https://www.infinitysmart.eu/api/failover-health?_t=' + Date.now();
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2200);
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
 
-        await fetch(checkUrl, { 
-          method: 'GET', 
-          mode: 'no-cors', 
+        const res = await fetch(checkUrl, {
+          method: 'GET',
           cache: 'no-store',
-          signal: controller.signal 
+          signal: controller.signal
         });
         clearTimeout(timeoutId);
 
-        // Se non va in errore, il server risponde ed è online!
-        transitionToOnline();
+        if (!res.ok || res.status !== 200) {
+          transitionToMaintenance();
+          return;
+        }
+
+        const data = await res.json();
+        if (data && data.status === 'online') {
+          transitionToOnline();
+        } else {
+          transitionToMaintenance();
+        }
       } catch (err) {
-        // Still offline
+        // Se il server è offline o non raggiungibile, mantieni/ripristina stato di manutenzione
+        transitionToMaintenance();
       }
     }
 
@@ -692,20 +697,26 @@
       document.getElementById('statusDot').classList.add('online');
       document.getElementById('statusIndicator').classList.add('online');
 
-      // 2. Mostra il tasto primario di rientro
+      // 2. Mostra il tasto primario di rientro (l'utente decide quando cliccare, nessun redirect automatico forzato)
       document.getElementById('portalOnlineCta').classList.add('visible');
 
       // 3. Applica i testi del nuovo stato online
       applyTranslations();
+    }
 
-      // 4. Avvia conto alla rovescia per reindirizzamento automatico morbido
-      countdownTimer = setInterval(() => {
-        redirectCountdown--;
-        if (redirectCountdown <= 0) {
-          clearInterval(countdownTimer);
-          window.location.href = 'https://www.infinitysmart.eu';
-        }
-      }, 1000);
+    function transitionToMaintenance() {
+      if (!isSiteOnline) return;
+      isSiteOnline = false;
+
+      // 1. Ripristina pallino e stato ambra
+      document.getElementById('statusDot').classList.remove('online');
+      document.getElementById('statusIndicator').classList.remove('online');
+
+      // 2. Nascondi il tasto CTA di rientro
+      document.getElementById('portalOnlineCta').classList.remove('visible');
+
+      // 3. Applica i testi dello stato di manutenzione
+      applyTranslations();
     }
 
     function checkImmediately() {
@@ -716,11 +727,11 @@
     currentLang = detectLanguage();
     applyTranslations();
 
-    // Controllo immediato a 0ms
+    // Controllo immediato all'avvio
     checkSiteHealth();
 
-    // Polling frequente ogni 3 secondi
-    setInterval(checkSiteHealth, 3000);
+    // Polling regolare ogni 5 secondi per rilevare live riavvii o spegnimenti
+    setInterval(checkSiteHealth, 5000);
   </script>
 </body>
 </html>
