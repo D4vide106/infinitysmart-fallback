@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InfinitySmart Network</title>
+  <meta name="description" content="InfinitySmart Network — Portale temporaneo e stato dei servizi.">
+  <link rel="icon" href="https://d1lppblt9t2x15.cloudfront.net/logos/4b2967f2ccddb465cb7c9f0903b8f755.png" type="image/png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07060a;
+      --text: #ffffff;
+      --text-muted: #8e8b9e;
+      --primary: #8b5cf6;
+      --primary-hover: #a78bfa;
+      --discord: #5865f2;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 24px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient soft background glow - zero grid, pure atmospheric light */
+    .ambient-glow {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.25) 0%, rgba(236, 72, 153, 0.1) 40%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: pulseGlow 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.7; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Main Centered Minimal Container */
+    main {
+      position: relative;
+      z-index: 1;
+      margin: auto 0;
+      width: 100%;
+      max-width: 680px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Logo Libero - No squares, no borders, no backgrounds */
+    .logo-container {
+      position: relative;
+      margin-bottom: 32px;
+      display: inline-block;
+    }
+
+    .logo-img {
+      width: 160px;
+      height: 160px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 15px 35px rgba(139, 92, 246, 0.5));
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+      cursor: pointer;
+    }
+
+    .logo-img:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 20px 45px rgba(168, 85, 247, 0.7));
+    }
+
+    /* Minimal Status Indicator */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      box-shadow: 0 0 10px #f59e0b;
+      animation: blink 2s infinite ease-in-out;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Clean Heading & Description */
+    h1 {
+      font-size: clamp(32px, 5vw, 46px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      margin-bottom: 14px;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    /* Minimal Actions Row - No heavy boxes */
+    .actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 32px;
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-status {
+      background: #ffffff;
+      color: #09080e;
+    }
+
+    .btn-status:hover {
+      background: #e2e8f0;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-discord {
+      background: rgba(88, 101, 242, 0.15);
+      color: #a5affb;
+      border: 1px solid rgba(88, 101, 242, 0.3);
+    }
+
+    .btn-discord:hover {
+      background: #5865f2;
+      color: #ffffff;
+      border-color: #5865f2;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(88, 101, 242, 0.4);
+    }
+
+    /* Minimal Minecraft IP Pill */
+    .minecraft-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .minecraft-pill:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .mc-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #34d399;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .mc-ip {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .mc-copy-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 2px;
+      transition: color 0.2s;
+    }
+
+    .minecraft-pill:hover .mc-copy-hint {
+      color: #ffffff;
+    }
+
+    /* Minimal Top Alert when site recovers */
+    .recovery-banner {
+      display: none;
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: #10b981;
+      color: #ffffff;
+      padding: 9px 20px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+      animation: fadeInDown 0.3s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translate(-50%, -15px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    .recovery-banner a {
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: underline;
+      margin-left: 6px;
+    }
+
+    /* Minimal Footer */
+    footer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      color: #524f61;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #9490a6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Atmospheric Light -->
+  <div class="ambient-glow"></div>
+
+  <!-- Recovery Banner (auto appears when portal is back up) -->
+  <div class="recovery-banner" id="recoveryBanner">
+    ✨ Il sito è tornato online! <a href="https://infinitysmart.eu">Rientra sul portale</a>
+  </div>
+
+  <!-- Main Centered Minimal Layout -->
+  <main>
+    <!-- Logo Libero (senza cornici, senza quadrati, solo il logo) -->
+    <div class="logo-container" onclick="window.location.reload()">
+      <img class="logo-img" src="https://d1lppblt9t2x15.cloudfront.net/logos/4b2967f2ccddb465cb7c9f0903b8f755.png" alt="InfinitySmart">
+    </div>
+
+    <!-- Minimal Status -->
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      <span>Manutenzione in corso</span>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h1>Stiamo aggiornando il sito</h1>
+    <p class="subtitle">
+      Il portale web è momentaneamente offline per aggiornamenti di sistema.
+      I server Minecraft e la community Discord sono attivi e raggiungibili.
+    </p>
+
+    <!-- Sleek Minimal Buttons -->
+    <div class="actions-row">
+      <a href="https://status.infinitysmart.eu" class="btn btn-status" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span>Status Page</span>
+      </a>
+
+      <a href="https://discord.gg/infinitysmart" class="btn btn-discord" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+        <span>Discord</span>
+      </a>
+    </div>
+
+    <!-- Minimal IP Pill -->
+    <div class="minecraft-pill" onclick="copyIP()" title="Clicca per copiare l'IP">
+      <span class="mc-tag">Minecraft</span>
+      <span class="mc-ip">play.infinitysmart.eu</span>
+      <span class="mc-copy-hint" id="copyHint">Copia IP</span>
+    </div>
+  </main>
+
+  <!-- Minimal Bottom Text -->
+  <footer>
+    <p>&copy; 2026 InfinitySmart Network &bull; <a href="https://status.infinitysmart.eu" target="_blank">Status</a> &bull; <a href="https://discord.gg/infinitysmart" target="_blank">Discord</a></p>
+  </footer>
+
+  <script>
+    function copyIP() {
+      const hint = document.getElementById('copyHint');
+      const ip = 'play.infinitysmart.eu';
+      navigator.clipboard.writeText(ip).then(() => {
+        hint.innerText = 'Copiato!';
+        hint.style.color = '#34d399';
+        setTimeout(() => {
+          hint.innerText = 'Copia IP';
+          hint.style.color = '';
+        }, 2000);
+      }).catch(() => {
+        hint.innerText = 'Copiato!';
+        setTimeout(() => { hint.innerText = 'Copia IP'; }, 2000);
+      });
+    }
+
+    // Auto-recovery check every 20 seconds
+    setInterval(() => {
+      fetch('https://infinitysmart.eu/api/auth/health', { method: 'GET', mode: 'no-cors' })
+        .then(() => {
+          const banner = document.getElementById('recoveryBanner');
+          if (banner) banner.style.display = 'block';
+        })
+        .catch(() => {});
+    }, 20000);
+  </script>
+</body>
+</html>
